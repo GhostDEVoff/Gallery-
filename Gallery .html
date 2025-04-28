@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Привет</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #111;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    header {
+      padding: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .gallery-container {
+      position: relative;
+      width: 90%;
+      max-width: 800px;
+      overflow: hidden;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.7);
+      background: #222;
+    }
+    .gallery-track {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+    .gallery-item {
+      min-width: 100%;
+      user-select: none;
+      overflow: hidden;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .nav-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.3);
+      border: none;
+      padding: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      color: white;
+      border-radius: 50%;
+      backdrop-filter: blur(5px);
+      transition: background 0.3s;
+    }
+    .nav-button:hover {
+      background: rgba(255,255,255,0.6);
+    }
+    .prev {
+      left: 20px;
+    }
+    .next {
+      right: 20px;
+    }
+    footer {
+      margin-top: 20px;
+      font-size: 14px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+ Галерея
+</header>
+
+<div class="gallery-container" id="gallery">
+  <div class="gallery-track" id="track">
+    <div class="gallery-item"><img src="https://picsum.photos/id/1005/800/500" alt="Фото 1"></div>
+    <div class="gallery-item"><img src="https://picsum.photos/id/1006/800/500" alt="Фото 2"></div>
+    <div class="gallery-item"><img src="https://picsum.photos/id/1011/800/500" alt="Фото 3"></div>
+    <div class="gallery-item"><img src="https://picsum.photos/id/1015/800/500" alt="Фото 4"></div>
+    <div class="gallery-item"><img src="https://picsum.photos/id/1024/800/500" alt="Фото 5"></div>
+  </div>
+  <button class="nav-button prev" onclick="moveSlide(-1)">‹</button>
+  <button class="nav-button next" onclick="moveSlide(1)">›</button>
+</div>
+
+<footer>
+  это сделано по приколу.
+</footer>
+
+<script>
+  let currentIndex = 0;
+  const track = document.getElementById('track');
+  const items = document.querySelectorAll('.gallery-item');
+  const totalItems = items.length;
+
+  function updateSlide() {
+    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+  }
+
+  function moveSlide(direction) {
+    currentIndex += direction;
+    if (currentIndex < 0) currentIndex = totalItems - 1;
+    if (currentIndex >= totalItems) currentIndex = 0;
+    updateSlide();
+  }
+
+  // Свайп пальцем
+  let startX = 0;
+  const gallery = document.getElementById('gallery');
+
+  gallery.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+  });
+
+  gallery.addEventListener('touchend', (e) => {
+    let endX = e.changedTouches[0].clientX;
+    if (startX - endX > 50) moveSlide(1);   // свайп влево
+    if (endX - startX > 50) moveSlide(-1);  // свайп вправо
+  });
+
+  // Автопрокрутка каждые 5 секунд
+  setInterval(() => {
+    moveSlide(1);
+  }, 5000);
+</script>
+
+</body>
+</html>
